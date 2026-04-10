@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra Confirmada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .confirmacion-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+        }
+        .check {
+            font-size: 80px;
+            color: #28a745;
+        }
+        h1 {
+            color: #28a745;
+        }
+        .numero-pedido {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmacion-container">
+        <div class="check">✅</div>
+        <h1>¡Compra exitosa!</h1>
+        <p>Gracias por tu compra. Tu pedido ha sido registrado.</p>
+        
+        <div class="numero-pedido" id="numeroPedido">
+            #PED-XXXXXX
+        </div>
+        
+        <p>Te enviaremos un correo con los detalles de tu pedido.</p>
+        
+        <button onclick="volverAlInicio()">Volver al inicio</button>
+    </div>
+
+    <script>
+        function generarNumeroPedido() {
+            const fecha = new Date();
+            const anio = fecha.getFullYear();
+            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+            const dia = String(fecha.getDate()).padStart(2, '0');
+            const aleatorio = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            return `PED-${anio}${mes}${dia}-${aleatorio}`;
+        }
+
+        const numeroPedido = generarNumeroPedido();
+        document.getElementById('numeroPedido').innerText = `#${numeroPedido}`;
+        
+        // Guardar en localStorage
+        const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+        pedidos.push({
+            numero: numeroPedido,
+            fecha: new Date().toISOString(),
+            total: localStorage.getItem('ultimoTotal') || 0
+        });
+        localStorage.setItem('pedidos', JSON.stringify(pedidos));
+        
+        // Limpiar carrito
+        localStorage.removeItem('carrito');
+        localStorage.removeItem('ultimoTotal');
+
+        function volverAlInicio() {
+            window.location.href = "../index.html";
+        }
+    </script>
+</body>
+</html>

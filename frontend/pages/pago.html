@@ -303,24 +303,19 @@
             btnPagar.disabled = !todosValidos;
         }
         
+        // FUNCIÓN PROCESAR PAGO - CORREGIDA
         function procesarPago() {
-            if (!valido.tarjeta || !valido.fecha || !valido.cvv || !valido.titular) {
-                alert("❌ Corrige los errores antes de pagar");
-                return;
-            }
+            // Guardar el total del carrito para mostrarlo en confirmación
+            const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+            localStorage.setItem('ultimoTotal', total);
             
-            alert("✅ ¡Pago procesado con éxito! Redirigiendo al inicio...");
-            
-            // Limpiar sesión (opcional)
-            // localStorage.removeItem("usuarioLogueado");
-            
-            setTimeout(() => {
-                window.location.href = "../index.html";
-            }, 1500);
+            alert("✅ ¡Pago procesado con éxito!");
+            window.location.href = "confirmacion.html";
         }
         
         function volverAlCarrito() {
-            window.location.href = "../index.html";
+            window.location.href = "carrito.html";
         }
         
         // Validación inicial del botón
