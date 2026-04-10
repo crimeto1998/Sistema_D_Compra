@@ -18,12 +18,125 @@ header {
     align-items: center;
 }
 
-header a {
+header {
+    background-color: #2E4057;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.nav-izq {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+header h1 {
+    font-size: 1.3rem;
+}
+
+.nav-der {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+header a.nav-link {
     color: white;
     text-decoration: none;
     background-color: #4A7B9D;
     padding: 8px 15px;
     border-radius: 5px;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+header a.nav-link:hover {
+    background-color: #5a8faf;
+}
+
+/* ── Botones de auth en navbar ────────────────────────────── */
+.btn-nav {
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-login {
+    background-color: #F6AE2D;
+    color: #1a1a1a;
+}
+
+.btn-login:hover {
+    background-color: #e09d1a;
+}
+
+.btn-perfil {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-perfil:hover {
+    background-color: #219a52;
+}
+
+/* ── Dropdown del perfil ──────────────────────────────────── */
+.nav-perfil {
+    position: relative;
+}
+
+.dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    min-width: 200px;
+    z-index: 1000;
+    padding: 12px;
+}
+
+.dropdown-email {
+    color: #666;
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    word-break: break-all;
+}
+
+.dropdown hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin-bottom: 8px;
+}
+
+.btn-logout {
+    width: 100%;
+    padding: 8px 12px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+.btn-logout:hover {
+    background: #c0392b;
+}
+
+.flecha {
+    font-size: 0.75rem;
+    margin-left: 4px;
 }
 
 main {
@@ -71,4 +184,239 @@ main h2 {
 
 .producto button:hover {
     background-color: #4A7B9D;
+}
+
+.item-carrito {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.item-carrito h3 {
+    color: #2E4057;
+    margin-bottom: 8px;
+}
+
+.controles {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.controles button {
+    background: #2E4057;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.controles button:hover:not(:disabled) {
+    background: #4A7B9D;
+}
+
+#resumen {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+#resumen h3 {
+    color: #2E4057;
+    font-size: 1.3rem;
+    flex: 1;
+}
+
+#resumen button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+#btn-vaciar {
+    background: #e74c3c;
+    color: white;
+}
+
+#btn-vaciar:hover {
+    background: #c0392b;
+}
+
+#btn-pagar {
+    background: #27ae60;
+    color: white;
+    font-size: 1rem;
+    padding: 12px 28px;
+}
+
+#btn-pagar:hover {
+    background: #219a52;
+}
+
+#auth-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.modal-contenido {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    position: relative;
+    animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+.modal-cerrar {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #999;
+    line-height: 1;
+}
+
+.modal-cerrar:hover {
+    color: #333;
+}
+
+.modal-titulo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2E4057;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-tabs {
+    display: flex;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 22px;
+}
+
+.modal-tabs button {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #888;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+}
+
+.tab-activo {
+    color: #2E4057 !important;
+    border-bottom-color: #2E4057 !important;
+    font-weight: 700;
+}
+
+.campo {
+    margin-bottom: 16px;
+}
+
+.campo label {
+    display: block;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.campo input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.campo input:focus {
+    border-color: #4A7B9D;
+}
+
+.error-msg {
+    background: #ffeaea;
+    color: #c0392b;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+    display: none;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #2E4057;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 4px;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background: #4A7B9D;
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.cambiar-tab {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 0.85rem;
+    color: #888;
+}
+
+.cambiar-tab a {
+    color: #4A7B9D;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
 }

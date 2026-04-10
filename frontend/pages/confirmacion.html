@@ -3,100 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compra Confirmada</title>
+    <title>Confirmación de Compra</title>
+    <link rel="stylesheet" href="../css/styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f2f5;
+        .confirmacion-wrap {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            padding: 60px 20px;
         }
-        .confirmacion-container {
+        .caja-confirmacion {
             background: white;
+            border-radius: 12px;
             padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             text-align: center;
-            max-width: 500px;
         }
-        .check {
-            font-size: 80px;
-            color: #28a745;
+        .caja-confirmacion .icono {
+            font-size: 4rem;
+            margin-bottom: 16px;
         }
-        h1 {
-            color: #28a745;
+        .caja-confirmacion h2 {
+            color: #2E4057;
+            margin-bottom: 12px;
         }
-        .numero-pedido {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 20px 0;
-            letter-spacing: 2px;
+        .caja-confirmacion p {
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.6;
         }
-        button {
-            background: #007bff;
+        .nombre-usuario {
+            color: #27ae60;
+            font-weight: 700;
+        }
+        .btn-volver {
+            display: inline-block;
+            background: #2E4057;
             color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
+            padding: 12px 28px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s;
         }
-        button:hover {
-            background: #0056b3;
+        .btn-volver:hover {
+            background: #4A7B9D;
         }
     </style>
 </head>
 <body>
-    <div class="confirmacion-container">
-        <div class="check">✅</div>
-        <h1>¡Compra exitosa!</h1>
-        <p>Gracias por tu compra. Tu pedido ha sido registrado.</p>
-        
-        <div class="numero-pedido" id="numeroPedido">
-            #PED-XXXXXX
+
+    <header>
+        <div class="nav-izq">
+            <h1>🛒 Sistema de Compras</h1>
         </div>
-        
-        <p>Te enviaremos un correo con los detalles de tu pedido.</p>
-        
-        <button onclick="volverAlInicio()">Volver al inicio</button>
-    </div>
+        <div class="nav-der">
+            <a href="../index.html" class="nav-link">🏠 Inicio</a>
+            <div id="auth-nav-btn"></div>
+        </div>
+    </header>
 
+    <main class="confirmacion-wrap">
+        <div class="caja-confirmacion">
+            <div class="icono">✅</div>
+            <h2>¡Compra confirmada!</h2>
+            <p>
+                Gracias, <span class="nombre-usuario" id="nombre-comprador">usuario</span>. 
+                Tu pedido ha sido procesado exitosamente. 
+                Recibirás una notificación cuando esté listo.
+            </p>
+            <a href="../index.html" class="btn-volver">← Volver al catálogo</a>
+        </div>
+    </main>
+
+    <script src="../js/auth.js"></script>
     <script>
-        function generarNumeroPedido() {
-            const fecha = new Date();
-            const anio = fecha.getFullYear();
-            const mes = String(fecha.getMonth() + 1).padStart(2, '0');
-            const dia = String(fecha.getDate()).padStart(2, '0');
-            const aleatorio = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-            return `PED-${anio}${mes}${dia}-${aleatorio}`;
+        if (!isLoggedIn()) {
+            window.location.href = 'carrito.html';
         }
 
-        const numeroPedido = generarNumeroPedido();
-        document.getElementById('numeroPedido').innerText = `#${numeroPedido}`;
-        
-        // Guardar en localStorage
-        const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
-        pedidos.push({
-            numero: numeroPedido,
-            fecha: new Date().toISOString(),
-            total: localStorage.getItem('ultimoTotal') || 0
-        });
-        localStorage.setItem('pedidos', JSON.stringify(pedidos));
-        
-        // Limpiar carrito
+        const usuario = getUsuario();
+        if (usuario) {
+            document.getElementById('nombre-comprador').textContent = usuario.nombre;
+        }
+
         localStorage.removeItem('carrito');
-        localStorage.removeItem('ultimoTotal');
-
-        function volverAlInicio() {
-            window.location.href = "../index.html";
-        }
+        localStorage.removeItem('stock');
     </script>
 </body>
 </html>

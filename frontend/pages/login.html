@@ -3,135 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Sistema de Compra</title>
+    <title>Login - Sistema de Compras</title>
     <link rel="stylesheet" href="../css/styles.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .login-page-wrap {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            padding: 40px 20px;
         }
-        .login-container {
+        .login-box {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            width: 350px;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-        input {
+            border-radius: 12px;
+            padding: 36px;
             width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-sizing: border-box;
+            max-width: 420px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
         }
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .error {
-            color: red;
-            font-size: 14px;
-            margin-top: 10px;
+        .login-box h2 {
+            color: #2E4057;
+            margin-bottom: 24px;
+            font-size: 1.4rem;
             text-align: center;
-        }
-        .register-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-        .register-link a {
-            color: #007bff;
-            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>🔐 Iniciar Sesión</h2>
-        <p style="text-align:center; color:#666;">Obligatorio para continuar con el pago</p>
-        
-        <input type="email" id="email" placeholder="Correo electrónico" required>
-        <input type="password" id="password" placeholder="Contraseña" required>
-        
-        <button onclick="iniciarSesion()">Iniciar Sesión</button>
-        
-        <div id="errorMsg" class="error"></div>
-        
-        <div class="register-link">
-            <a href="#">¿No tienes cuenta? Regístrate</a>
+
+    <header>
+        <div class="nav-izq">
+            <h1>🛒 Sistema de Compras</h1>
+        </div>
+        <div class="nav-der">
+            <a href="../index.html" class="nav-link">🏠 Inicio</a>
+            <div id="auth-nav-btn"></div>
+        </div>
+    </header>
+
+    <div class="login-page-wrap">
+        <div class="login-box">
+            <h2>🔑 Accede a tu cuenta</h2>
+
+            <div class="modal-tabs">
+                <button id="tab-login"    class="tab-activo" onclick="cambiarTab('login')">
+                    Iniciar sesión
+                </button>
+                <button id="tab-register" onclick="cambiarTab('register')">
+                    Registrarse
+                </button>
+            </div>
+
+            <div id="form-login">
+                <div id="error-login" class="error-msg"></div>
+                <div class="campo">
+                    <label for="login-email">Correo electrónico</label>
+                    <input type="email" id="login-email" placeholder="tu@correo.com">
+                </div>
+                <div class="campo">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <button id="btn-login-submit" class="btn-submit" onclick="handleLogin()">
+                    Ingresar
+                </button>
+                <p class="cambiar-tab">
+                    ¿No tienes cuenta?
+                    <a onclick="cambiarTab('register')">Regístrate gratis</a>
+                </p>
+            </div>
+
+            <div id="form-register" style="display:none;">
+                <div id="error-register" class="error-msg"></div>
+                <div class="campo">
+                    <label for="reg-nombre">Nombre completo</label>
+                    <input type="text" id="reg-nombre" placeholder="Nicolás García">
+                </div>
+                <div class="campo">
+                    <label for="reg-email">Correo electrónico</label>
+                    <input type="email" id="reg-email" placeholder="tu@correo.com">
+                </div>
+                <div class="campo">
+                    <label for="reg-password">Contraseña</label>
+                    <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="campo">
+                    <label for="reg-confirm">Confirmar contraseña</label>
+                    <input type="password" id="reg-confirm" placeholder="Repite tu contraseña">
+                </div>
+                <button id="btn-register-submit" class="btn-submit" onclick="handleRegister()">
+                    Crear cuenta
+                </button>
+                <p class="cambiar-tab">
+                    ¿Ya tienes cuenta?
+                    <a onclick="cambiarTab('login')">Inicia sesión</a>
+                </p>
+            </div>
         </div>
     </div>
 
+    <script src="../js/auth.js"></script>
     <script>
-        function iniciarSesion() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('errorMsg');
-            
-            // Validaciones básicas
-            if (email === "" || password === "") {
-                errorDiv.innerText = "❌ Completa todos los campos";
-                return;
-            }
-            
-            if (!email.includes("@") || !email.includes(".")) {
-                errorDiv.innerText = "❌ Correo electrónico inválido";
-                return;
-            }
-            
-            if (password.length < 4) {
-                errorDiv.innerText = "❌ La contraseña debe tener al menos 4 caracteres";
-                return;
-            }
-            
-            // Simular usuarios válidos (para prueba)
-            // En un proyecto real, esto se validaría contra el backend
-            const usuariosValidos = [
-                { email: "usuario@test.com", password: "1234" },
-                { email: "cliente@ejemplo.com", password: "abcd" }
-            ];
-            
-            const usuarioEncontrado = usuariosValidos.find(
-                u => u.email === email && u.password === password
-            );
-            
-            if (usuarioEncontrado) {
-                // Guardar sesión en localStorage
-                localStorage.setItem("usuarioLogueado", JSON.stringify({
-                    email: email,
-                    loginTime: new Date().toISOString()
-                }));
-                
-                errorDiv.innerText = "";
-                errorDiv.style.color = "green";
-                errorDiv.innerText = "✅ Inicio de sesión exitoso. Redirigiendo...";
-                
-                // Redirigir al formulario de pago
-                setTimeout(() => {
-                    window.location.href = "pago.html";
-                }, 1000);
-            } else {
-                errorDiv.innerText = "❌ Usuario o contraseña incorrectos";
-            }
+        if (isLoggedIn()) {
+            window.location.href = '../index.html';
+        }
+
+        function onLoginExitoso() {
+            window.location.href = '../index.html';
         }
     </script>
 </body>

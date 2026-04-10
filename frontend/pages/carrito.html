@@ -114,182 +114,118 @@
             <!-- Aquí se mostrará info del usuario si está logueado -->
         </div>
 
-        <h1>🛒 Mi Carrito de Compras</h1>
-        
-        <div id="contenido-carrito">
-            <!-- El carrito se renderiza aquí con JavaScript -->
+    <header>
+        <div class="nav-izq">
+            <h1>🛒 Mi Carrito</h1>
         </div>
-        
-        <div class="acciones">
-            <button class="btn-seguir" onclick="seguirComprando()">← Seguir comprando</button>
-            <button class="btn-pagar" id="btnPagar" onclick="verificarLoginYPagar()">💳 Proceder al pago</button>
+
+        <div class="nav-der">
+            <a href="../index.html" class="nav-link">← Seguir comprando</a>
+
+            <div id="auth-nav-btn"></div>
+        </div>
+    </header>
+
+    <div id="auth-modal">
+        <div class="modal-contenido">
+            <button class="modal-cerrar" onclick="cerrarModal()">✕</button>
+
+            <p class="modal-titulo">Para continuar al pago</p>
+
+            <div class="modal-tabs">
+                <button id="tab-login"    class="tab-activo" onclick="cambiarTab('login')">
+                    Iniciar sesión
+                </button>
+                <button id="tab-register" onclick="cambiarTab('register')">
+                    Registrarse
+                </button>
+            </div>
+
+            <div id="form-login">
+                <div id="error-login" class="error-msg"></div>
+
+                <div class="campo">
+                    <label for="login-email">Correo electrónico</label>
+                    <input type="email" id="login-email" placeholder="tu@correo.com">
+                </div>
+                <div class="campo">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <button id="btn-login-submit" class="btn-submit" onclick="handleLogin()">
+                    Ingresar y pagar
+                </button>
+                <p class="cambiar-tab">
+                    ¿No tienes cuenta?
+                    <a onclick="cambiarTab('register')">Regístrate gratis</a>
+                </p>
+            </div>
+
+            <div id="form-register" style="display:none;">
+                <div id="error-register" class="error-msg"></div>
+
+                <div class="campo">
+                    <label for="reg-nombre">Nombre completo</label>
+                    <input type="text" id="reg-nombre" placeholder="Nicolás García">
+                </div>
+                <div class="campo">
+                    <label for="reg-email">Correo electrónico</label>
+                    <input type="email" id="reg-email" placeholder="tu@correo.com">
+                </div>
+                <div class="campo">
+                    <label for="reg-password">Contraseña</label>
+                    <input type="password" id="reg-password" placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="campo">
+                    <label for="reg-confirm">Confirmar contraseña</label>
+                    <input type="password" id="reg-confirm" placeholder="Repite tu contraseña">
+                </div>
+                <button id="btn-register-submit" class="btn-submit" onclick="handleRegister()">
+                    Crear cuenta y pagar
+                </button>
+                <p class="cambiar-tab">
+                    ¿Ya tienes cuenta?
+                    <a onclick="cambiarTab('login')">Inicia sesión</a>
+                </p>
+            </div>
         </div>
     </div>
 
+    <main>
+        <div id="lista-carrito"></div>
+
+        <div id="resumen">
+            <h3>Total: <span id="total">$0</span></h3>
+            <button id="btn-vaciar" onclick="vaciarCarrito()">Vaciar carrito</button>
+            <button id="btn-pagar"  onclick="intentarPagar()">Proceder al pago</button>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/carrito.js"></script>
+
     <script>
-        // ========================================
-        // FUNCIÓN PARA VERIFICAR LOGIN ANTES DE PAGAR
-        // ========================================
-        function verificarLoginYPagar() {
-            const usuarioLogueado = localStorage.getItem("usuarioLogueado");
-            
-            if (usuarioLogueado) {
-                // Si ya inició sesión, va al formulario de pago
-                window.location.href = "pago.html";
-            } else {
-                // Si no ha iniciado sesión, va al login
-                alert("🔐 Debes iniciar sesión para continuar con el pago");
-                window.location.href = "login.html";
-            }
-        }
-        
-        // ========================================
-        // FUNCIÓN PARA SEGUIR COMPRANDO
-        // ========================================
-        function seguirComprando() {
-            window.location.href = "../index.html";
-        }
-        
-        // ========================================
-        // FUNCIÓN PARA CERRAR SESIÓN
-        // ========================================
-        function cerrarSesion() {
-            localStorage.removeItem("usuarioLogueado");
-            actualizarInfoUsuario();
-            alert("Sesión cerrada correctamente");
-        }
-        
-        // ========================================
-        // ACTUALIZAR INFO DEL USUARIO EN EL HEADER
-        // ========================================
-        function actualizarInfoUsuario() {
-            const usuarioLogueado = localStorage.getItem("usuarioLogueado");
-            const usuarioInfo = document.getElementById("usuarioInfo");
-            
-            if (usuarioLogueado) {
-                const usuario = JSON.parse(usuarioLogueado);
-                usuarioInfo.innerHTML = `
-                    <span>✅ Conectado como: <strong>${usuario.email}</strong></span>
-                    <button class="cerrar-sesion" onclick="cerrarSesion()">Cerrar sesión</button>
-                `;
-            } else {
-                usuarioInfo.innerHTML = `
-                    <span>⚠️ No has iniciado sesión. Debes iniciar sesión para pagar.</span>
-                    <button class="cerrar-sesion" onclick="window.location.href='login.html'">Iniciar sesión</button>
-                `;
-            }
-        }
-        
-        // ========================================
-        // CARGAR PRODUCTOS DEL CARRITO (del localStorage)
-        // ========================================
-        function cargarCarrito() {
-            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-            const contenedor = document.getElementById("contenido-carrito");
-            
+        function intentarPagar() {
             if (carrito.length === 0) {
-                contenedor.innerHTML = `
-                    <div class="vacio">
-                        🛍️ Tu carrito está vacío<br><br>
-                        <button class="btn-seguir" onclick="seguirComprando()">Ver productos</button>
-                    </div>
-                `;
+                alert('Tu carrito está vacío. Agrega productos antes de pagar.');
                 return;
             }
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th></th></tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            let total = 0;
-            
-            carrito.forEach((producto, index) => {
-                const subtotal = producto.precio * producto.cantidad;
-                total += subtotal;
-                html += `
-                    <tr>
-                        <td>${producto.nombre}</td>
-                        <td>$${producto.precio.toLocaleString()}</td>
-                        <td>
-                            <input type="number" class="cantidad" value="${producto.cantidad}" 
-                                   min="1" onchange="actualizarCantidad(${index}, this.value)">
-                        </td>
-                        <td>$${subtotal.toLocaleString()}</td>
-                        <td><button onclick="eliminarProducto(${index})">Eliminar</button></td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                    </tbody>
-                </table>
-                <div class="total">
-                    <strong>Total: $${total.toLocaleString()}</strong>
-                </div>
-            `;
-            
-            contenedor.innerHTML = html;
-            actualizarContadorCarrito();
-        }
-        
-        // ========================================
-        // ACTUALIZAR CANTIDAD DE UN PRODUCTO
-        // ========================================
-        function actualizarCantidad(index, nuevaCantidad) {
-            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-            nuevaCantidad = parseInt(nuevaCantidad);
-            
-            if (nuevaCantidad > 0) {
-                carrito[index].cantidad = nuevaCantidad;
+
+            if (!isLoggedIn()) {
+                abrirModal('login');
             } else {
-                carrito.splice(index, 1);
+                irAPagar();
             }
-            
-            localStorage.setItem("carrito", JSON.stringify(carrito));
-            cargarCarrito();
         }
-        
-        // ========================================
-        // ELIMINAR PRODUCTO DEL CARRITO
-        // ========================================
-        function eliminarProducto(index) {
-            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-            carrito.splice(index, 1);
-            localStorage.setItem("carrito", JSON.stringify(carrito));
-            cargarCarrito();
+
+        function onLoginExitoso() {
+            renderAuthNav();        
+            irAPagar();             
         }
-        
-        // ========================================
-        // ACTUALIZAR CONTADOR DEL CARRITO (para el header)
-        // ========================================
-        function actualizarContadorCarrito() {
-            let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-            let totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-            
-            // Actualizar el contador en el index.html (si está abierto)
-            const contador = document.getElementById("contador");
-            if (contador) {
-                contador.innerText = totalItems;
-            }
-            
-            // Guardar para otras páginas
-            localStorage.setItem("contadorCarrito", totalItems);
+
+        function irAPagar() {
+            window.location.href = 'confirmacion.html';
         }
-        
-        // ========================================
-        // INICIALIZAR LA PÁGINA
-        // ========================================
-        function init() {
-            actualizarInfoUsuario();
-            cargarCarrito();
-        }
-        
-        // Ejecutar al cargar la página
-        init();
     </script>
 </body>
 </html>
